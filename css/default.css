@@ -92,3 +92,12 @@ td.print-overdue    { font-weight: bold; }
 .table-nonfluid {
    width: auto !important;
 }
+
+.issue_id {
+	text-overflow: ellipsis;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: text-top;
+	width: 240px;
+}
