@@ -321,6 +321,36 @@ function mc_project_rename_category_by_name( $p_username, $p_password, $p_projec
 }
 
 /**
+ * Get workflow of a project.
+ *
+ * @param string  $p_username   The name of the user trying to access the versions.
+ * @param string  $p_password   The password of the user.
+ * @param integer $p_project_id The id of the project to retrieve the versions for.
+ * @return array  string of workflow.
+ */
+function mc_project_get_workflow( $p_username, $p_password, $p_project_id ) {
+	global $g_project_override;
+	$t_user_id = mci_check_login( $p_username, $p_password );
+
+	if( $t_user_id === false ) {
+		return mci_fault_login_failed();
+	}
+
+	if( !project_exists( $p_project_id ) ) {
+		return ApiObjectFactory::faultNotFound( 'Project \'' . $p_project_id . '\' does not exist.' );
+	}
+
+	$g_project_override = $p_project_id;
+	if( !mci_has_readonly_access( $t_user_id, $p_project_id ) ) {
+		return mci_fault_access_denied( $t_user_id );
+	}
+
+	$t_result = config_get( "status_enum_workflow", null, $t_user_id, $p_project_id );
+
+	return $t_result;
+}
+
+/**
  * Get all versions of a project.
  *
  * @param string  $p_username   The name of the user trying to access the versions.
